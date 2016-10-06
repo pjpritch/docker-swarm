@@ -1,0 +1,51 @@
+mongo:
+  ports:
+    - 27017
+  environment:
+    - SERVICE_ID={{ alias }}api-service-db
+  image: mongo
+
+elasticsearch:
+  ports:
+    - 9200
+  environment:
+    - SERVICE_ID={{ alias }}api-service-search
+  image: elasticsearch
+
+memcached:
+  ports:
+    - 11211
+  environment:
+    - SERVICE_ID={{ alias }}api-service-cache
+  image: memcached
+
+redis:
+  ports:
+    - 6379
+  environment:
+    - SERVICE_ID={{ alias }}api-service-redis
+  image: redis
+
+blue:
+  ports:
+    - 8080
+  environment:
+    - SERVICE_NAME={{ alias }}api-service-blue
+    - MONGO_HOST_PORT={% raw %}{{{% endraw %} key "services/mongo/{{ alias }}api-service-db" {% raw %}}}{% endraw %}
+    - ELASTICSEARCH_HOST_PORT={% raw %}{{{% endraw %} key "services/elasticsearch/{{ alias }}api-service-search" {% raw %}}}{% endraw %}
+    - MEMCACHED_HOST_PORT={% raw %}{{{% endraw %} key "services/memcached/{{ alias }}api-service-cache" {% raw %}}}{% endraw %}
+    - REDIS_HOST_PORT={% raw %}{{{% endraw %} key "services/redis/{{ alias }}api-service-redis" {% raw %}}}{% endraw %}
+
+  image: pjpritch/api
+
+green:
+  ports:
+    - 8080
+  environment:
+    - SERVICE_NAME={{ alias }}api-service-green
+    - MONGO_HOST_PORT={% raw %}{{{% endraw %} key "services/mongo/{{ alias }}api-service-db" {% raw %}}}{% endraw %}
+    - ELASTICSEARCH_HOST_PORT={% raw %}{{{% endraw %} key "services/elasticsearch/{{ alias }}api-service-search" {% raw %}}}{% endraw %}
+    - MEMCACHED_HOST_PORT={% raw %}{{{% endraw %} key "services/memcached/{{ alias }}api-service-cache" {% raw %}}}{% endraw %}
+    - REDIS_HOST_PORT={% raw %}{{{% endraw %} key "services/redis/{{ alias }}api-service-redis" {% raw %}}}{% endraw %}
+
+  image: pjpritch/api

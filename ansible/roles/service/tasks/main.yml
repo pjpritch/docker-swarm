@@ -16,8 +16,8 @@
 
 - include: apply-service-template.yml
 
-- name: DB container is pulled
-  shell: docker-compose pull db
+- name: Mongo container is pulled
+  shell: docker-compose pull mongo
   args:
     chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
   environment:
@@ -25,8 +25,65 @@
   when: has_db is defined
   tags: [service]
 
-- name: DB container is running
-  shell: docker-compose up -d --no-recreate db
+- name: Elastic Search container is pulled
+  shell: docker-compose pull elasticsearch
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  tags: [service]
+
+- name: Redis container is pulled
+  shell: docker-compose pull redis
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  tags: [service]
+
+- name: Memcached container is pulled
+  shell: docker-compose pull memcached
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  tags: [service]
+
+- name: Mongo container is running
+  shell: docker-compose up -d --no-recreate mongo
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  register: result
+  tags: [service]
+
+- name: Elastic Search container is running
+  shell: docker-compose up -d --no-recreate elasticsearch
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  register: result
+  tags: [service]
+
+- name: Redis container is running
+  shell: docker-compose up -d --no-recreate redis
+  args:
+    chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
+  environment:
+    DOCKER_HOST: tcp://0.0.0.0:2375
+  when: has_db is defined
+  register: result
+  tags: [service]
+
+- name: Memcached container is running
+  shell: docker-compose up -d --no-recreate memcached
   args:
     chdir: "{{ compose_config_dir }}/{{ alias }}{{ container_name }}"
   environment:

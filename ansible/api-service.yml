@@ -2,9 +2,10 @@
   remote_user: vagrant
   sudo: yes
   vars:
-    - container_image: books-service
-    - container_name: books-service
-    - http_address: /api/v1/books
+    - container_image: api
+    - server_match: api.*
+    - container_name: api-service
+    - http_address: /
     - has_db: true
   roles:
     - docker
